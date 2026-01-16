@@ -1,4 +1,5 @@
-from .models import RequestLog
+from .models import RequestLog, BlockedIP
+from django.http import HttpResponseForbidden
 
 
 class IPLoggingMiddleware:
@@ -11,6 +12,10 @@ class IPLoggingMiddleware:
     def __call__(self, request):
         # Get the client's IP address
         ip_address = self.get_client_ip(request)
+
+        # Check if this IP is blocked (exists in BlockedIP model)
+        if BlockedIP.objects.filter(ip_address=ip_address).exists():
+            return HttpResponseForbidden("Your IP has been blocked")
 
         # Log the request
         RequestLog.objects.create(ip_address=ip_address, path=request.path)
