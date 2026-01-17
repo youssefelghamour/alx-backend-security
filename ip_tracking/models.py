@@ -19,3 +19,13 @@ class BlockedIP(models.Model):
 
     def __str__(self):
         return self.ip_address
+
+
+class SuspiciousIP(models.Model):
+    """Model to store suspicious IP addresses with reasons"""
+    ip_address = models.GenericIPAddressField()
+    reason = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.ip_address} - {self.reason}"

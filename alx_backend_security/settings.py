@@ -131,3 +131,16 @@ CACHES = {
         }
     }
 }
+
+
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
+CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
+
+from celery.schedules import crontab
+
+CELERY_BEAT_SCHEDULE = {
+    'detect-anomalies-hourly': {
+        'task': 'ip_tracking.tasks.detect_anomalies',
+        'schedule': crontab(minute=0), # Runs every hour
+    },
+}
